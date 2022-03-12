@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../search/search.dart';
+import '../news/news.dart';
+import '../lab/lab.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -8,7 +10,21 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+  late TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    tabController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,9 +54,34 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ],
-        title: const Text('首页', style: TextStyle(color: Color(0xff333333),),),
+        title: TabBar(
+          labelStyle: const TextStyle(
+            fontSize: 18
+          ),
+          unselectedLabelStyle: const TextStyle(
+            fontSize: 16
+          ),
+          labelColor: const Color(0xff333333),
+          indicatorSize: TabBarIndicatorSize.label,
+          indicatorColor: const Color(0xffffc81f),
+          controller: tabController,
+          tabs: const <Widget>[
+            Tab(
+              text: '新闻',
+            ),
+            Tab(
+              text: '实验室',
+            )
+          ],
+        )
       ),
-      body: const Text('首页内容'),
+      body: TabBarView(
+        controller: tabController,
+        children: const <Widget>[
+          NewsPage(),
+          LabPage(),
+        ]
+      ),
     );
   }
 }
